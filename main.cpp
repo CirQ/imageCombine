@@ -40,12 +40,12 @@ int combineViaInterpolation(Mat &show, Mat &hide, Mat &result){
         resize(show, resizedShow, Size_<int>(hide.cols/2, hide.rows/2), 0, 0, INTER_NEAREST);
         if(result.isContinuous()){
             for(int h = 0; h < result.rows; h++){
-                if(h%2 != 1) // control which pixel to be overwritten
+                if(h%2 != 0) // control which pixel to be overwritten
                     continue;
 
                 auto *rowPtr = result.ptr<Vec3b>(h);
                 for(int w = 0; w < result.cols; w++){
-                    if(w%2 != 1) // control which pixel to be overwritten
+                    if(w%2 != 0) // control which pixel to be overwritten
                         continue;
 
                     rowPtr[w] = resizedShow.at<Vec3b>(h/2, w/2);
@@ -62,8 +62,20 @@ int combineViaInterpolation(Mat &show, Mat &hide, Mat &result){
     return flag;
 }
 
-void displayWithInterpolation(Mat& image){
+void displayWithInterpolation(Mat *image){
+    /**************************************************************************
+     * Display images when display in different mode, in this case,
+     * in small scale or in large scale (double size).
+     **************************************************************************/
 
+    cout << image->size() << endl;
+    Mat &hidden = *image;
+    Mat shown;
+    resize(hidden, shown, Size(), 0.5, 0.5, INTER_NEAREST);
+
+    imshow("what is display in small scale", shown);
+    imshow("what is display in large scale", hidden);
+    waitKey(0);
 }
 
 int main(int argc, char *argv[]){
@@ -79,9 +91,17 @@ int main(int argc, char *argv[]){
     if(loadImagesFlag == -1)
         return EXIT_FAILURE;
 
-    int combineImagesFlag = combineViaInterpolation(showImage, hideImage, dstImage);
+    // The original usage of function pointers:
+    // int (*methodPtr)(Mat &, Mat &, Mat &) = combineViaInterpolation;
+    // void (*displayPtr)(Mat *) = displayWithInterpolation;
+
+    // After C++ 11:
+    auto methodPtr = combineViaInterpolation;
+    auto displayPtr = displayWithInterpolation;
+
+    int combineImagesFlag = methodPtr(showImage, hideImage, dstImage);
     if(combineImagesFlag == -1)
         return EXIT_FAILURE;
-    displayWithInterpolation(dstImage);
+    displayPtr(&dstImage);
     return EXIT_SUCCESS;
 }
