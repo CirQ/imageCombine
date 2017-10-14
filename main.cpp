@@ -6,12 +6,12 @@ int loadImages(Mat &img1, Mat &img2, const char *name1, const char *name2){
      **************************************************************************/
 
     int flag = 0;
-    img1 = imread(name1);
+    img1 = imread(name1, CV_LOAD_IMAGE_UNCHANGED);
     if(!img1.data){
         cerr << "File " << name1 << " does not exit!" << endl;
         flag = -1;
     }
-    img2 = imread(name2);
+    img2 = imread(name2, CV_LOAD_IMAGE_UNCHANGED);
     if(!img2.data){
         cerr << "File " << name2 << " does not exit!" << endl;
         flag = -1;
@@ -37,8 +37,8 @@ int main(int argc, char *argv[]){
     // void (*displayPtr)(Mat *) = displayWithInterpolation;
 
     // After C++ 11:
-    auto methodPtr = combineViaInterpolation;
-    auto displayPtr = displayWithInterpolation;
+    auto methodPtr = combineViaAlpha;
+    auto displayPtr = displayWithAlpha;
 
     int combineImagesFlag = methodPtr(showImage, hideImage, dstImage);
     if(combineImagesFlag == -1)
