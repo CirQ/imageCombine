@@ -14,6 +14,25 @@
 using namespace cv;
 using namespace std;
 
+int loadImages(Mat &img1, Mat &img2, const char *name1, const char *name2){
+    /**************************************************************************
+     * Open two images with given file names, if sucess, returns 0, else 1.
+     **************************************************************************/
+
+    int flag = 0;
+    img1 = imread(name1, CV_LOAD_IMAGE_UNCHANGED);
+    if(!img1.data){
+        cerr << "File " << name1 << " does not exit!" << endl;
+        flag = -1;
+    }
+    img2 = imread(name2, CV_LOAD_IMAGE_UNCHANGED);
+    if(!img2.data){
+        cerr << "File " << name2 << " does not exit!" << endl;
+        flag = -1;
+    }
+    return flag;
+}
+
 // in this group test, show = dog.jpg, hide = maid.jpg
 
 int combineViaInterpolation(Mat &show, Mat &hide, Mat &result){

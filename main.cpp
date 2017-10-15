@@ -1,24 +1,5 @@
 #include "ImageCombine.h"
 
-int loadImages(Mat &img1, Mat &img2, const char *name1, const char *name2){
-    /**************************************************************************
-     * Open two images with given file names, if sucess, returns 0, else 1.
-     **************************************************************************/
-
-    int flag = 0;
-    img1 = imread(name1, CV_LOAD_IMAGE_UNCHANGED);
-    if(!img1.data){
-        cerr << "File " << name1 << " does not exit!" << endl;
-        flag = -1;
-    }
-    img2 = imread(name2, CV_LOAD_IMAGE_UNCHANGED);
-    if(!img2.data){
-        cerr << "File " << name2 << " does not exit!" << endl;
-        flag = -1;
-    }
-    return flag;
-}
-
 int main(int argc, char *argv[]){
     if(argc != 3){
         cerr << "Usage: " << argv[0] << " <filename1> <filename2>" << endl;
